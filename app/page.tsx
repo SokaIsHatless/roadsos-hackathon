@@ -94,7 +94,7 @@ export default function HomePage() {
         ))}
       </section>
 
-      <section className="mt-4">
+      <section className="mt-4 flex flex-col gap-2">
         <Link
           href="/blood-bank"
           className="flex items-center justify-between w-full px-5 py-4 rounded-2xl bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white border border-gray-700 transition-colors"
@@ -114,6 +114,31 @@ export default function HomePage() {
             className="w-6 h-6 text-red-500 shrink-0"
           >
             <path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0C19 10.5 12 2 12 2z" />
+          </svg>
+        </Link>
+        <Link
+          href="/first-aid"
+          className="flex items-center justify-between w-full px-5 py-4 rounded-2xl bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white border border-gray-700 transition-colors"
+          aria-label="Open First Aid Guide"
+        >
+          <div>
+            <div className="text-sm font-bold">First Aid Guide</div>
+            <div className="text-xs text-gray-400 mt-0.5">
+              Step-by-step emergency first aid — works offline
+            </div>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+            className="w-6 h-6 text-red-500 shrink-0"
+          >
+            <path
+              fillRule="evenodd"
+              d="M11.25 5.25a.75.75 0 0 1 1.5 0V11h5.75a.75.75 0 0 1 0 1.5H12.75v5.75a.75.75 0 0 1-1.5 0V12.5H5.5a.75.75 0 0 1 0-1.5h5.75V5.25Z"
+              clipRule="evenodd"
+            />
           </svg>
         </Link>
       </section>
