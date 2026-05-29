@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { emergencyNumbers } from "@/lib/emergencyNumbers";
 import type { EmergencyNumber } from "@/lib/emergencyNumbers";
 
@@ -91,6 +92,30 @@ export default function HomePage() {
         {secondary.map((num) => (
           <SecondaryButton key={num.number} num={num} />
         ))}
+      </section>
+
+      <section className="mt-4">
+        <Link
+          href="/blood-bank"
+          className="flex items-center justify-between w-full px-5 py-4 rounded-2xl bg-gray-800 hover:bg-gray-700 active:bg-gray-900 text-white border border-gray-700 transition-colors"
+          aria-label="Open Blood Bank Finder"
+        >
+          <div>
+            <div className="text-sm font-bold">Blood Bank Finder</div>
+            <div className="text-xs text-gray-400 mt-0.5">
+              Find nearby banks &amp; check blood-group stock
+            </div>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+            className="w-6 h-6 text-red-500 shrink-0"
+          >
+            <path d="M12 2C12 2 5 10.5 5 15a7 7 0 0 0 14 0C19 10.5 12 2 12 2z" />
+          </svg>
+        </Link>
       </section>
 
       <footer className="mt-8 text-center text-xs text-gray-500 leading-relaxed">
