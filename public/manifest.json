@@ -1,0 +1,16 @@
+{
+  "name": "RoadSoS",
+  "short_name": "RoadSoS",
+  "description": "Emergency response for road accidents — works offline",
+  "theme_color": "#dc2626",
+  "background_color": "#020617",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

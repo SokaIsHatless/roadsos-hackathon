@@ -1,5 +1,9 @@
-import { emergencyNumbers } from "@/lib/emergencyNumbers";
+"use client";
+
+import { useState, useEffect } from "react";
+import { emergencyNumbersByCountry } from "@/lib/emergencyNumbers";
 import type { EmergencyNumber } from "@/lib/emergencyNumbers";
+import { getLocation, getLocationErrorMessage } from "@/lib/getLocation";
 
 function PhoneIcon({ className }: { className?: string }) {
   return (
@@ -61,11 +65,80 @@ function SecondaryButton({ num }: { num: EmergencyNumber }) {
 }
 
 export default function HomePage() {
-  const primary = emergencyNumbers.find((n) => n.primary);
-  const secondary = emergencyNumbers.filter((n) => !n.primary);
+  const [country, setCountry] = useState("IN");
+  const [isOnline, setIsOnline] = useState(true);
+  const [sosLoading, setSosLoading] = useState(false);
+  const [sosError, setSosError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("roadsos_country");
+      if (saved === "IN" || saved === "US") setCountry(saved);
+      setIsOnline(navigator.onLine);
+      const handleOnline = () => setIsOnline(true);
+      const handleOffline = () => setIsOnline(false);
+      window.addEventListener("online", handleOnline);
+      window.addEventListener("offline", handleOffline);
+      return () => {
+        window.removeEventListener("online", handleOnline);
+        window.removeEventListener("offline", handleOffline);
+      };
+    }
+  }, []);
+
+  function selectCountry(code: string) {
+    setCountry(code);
+    localStorage.setItem("roadsos_country", code);
+  }
+
+  const numbers = emergencyNumbersByCountry[country] ?? emergencyNumbersByCountry.IN;
+  const primary = numbers.find((n) => n.primary);
+  const secondary = numbers.filter((n) => !n.primary);
+
+  async function handleSos() {
+    setSosLoading(true);
+    setSosError(null);
+    try {
+      const loc = await getLocation();
+      const body = `EMERGENCY — I need help. My location: https://maps.google.com/?q=${loc.lat},${loc.lng} (Accuracy: ${Math.round(loc.accuracy)}m)`;
+      window.location.href = `sms:112?body=${encodeURIComponent(body)}`;
+    } catch (err) {
+      setSosError(getLocationErrorMessage(err));
+    } finally {
+      setSosLoading(false);
+    }
+  }
 
   return (
     <main className="flex flex-col min-h-dvh px-4 pt-8 pb-6 max-w-md mx-auto">
+      <div className="flex justify-center mb-3">
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            isOnline
+              ? "bg-green-900/40 text-green-400"
+              : "bg-red-900/40 text-red-400"
+          }`}
+        >
+          {isOnline ? "🟢 Online" : "🔴 Offline mode"}
+        </span>
+      </div>
+
+      <div className="flex justify-center gap-2 mb-4">
+        {["IN", "US"].map((code) => (
+          <button
+            key={code}
+            onClick={() => selectCountry(code)}
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+              country === code
+                ? "bg-red-600 text-white"
+                : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+            }`}
+          >
+            {code === "IN" ? "🇮🇳 India" : "🇺🇸 USA"}
+          </button>
+        ))}
+      </div>
+
       <header className="mb-8 text-center">
         <h1 className="text-4xl font-black tracking-tight text-white">
           Road<span className="text-red-500">SoS</span>
@@ -91,6 +164,25 @@ export default function HomePage() {
         {secondary.map((num) => (
           <SecondaryButton key={num.number} num={num} />
         ))}
+      </section>
+
+      <section aria-label="Send SOS with location" className="mt-6">
+        <button
+          onClick={handleSos}
+          disabled={sosLoading}
+          className="flex items-center justify-center w-full min-h-[72px] px-6 py-5 rounded-2xl bg-red-600 hover:bg-red-500 active:bg-red-700 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xl font-black shadow-lg shadow-red-900/40 transition-colors"
+          aria-label="Send SOS text with my GPS location"
+        >
+          {sosLoading ? "Getting location…" : "🚨 Send SOS with My Location"}
+        </button>
+        <p className="mt-2 text-center text-xs text-gray-500">
+          Opens your texting app with location pre-filled
+        </p>
+        {sosError && (
+          <p className="mt-2 text-center text-sm text-red-400" role="alert">
+            {sosError}
+          </p>
+        )}
       </section>
 
       <footer className="mt-8 text-center text-xs text-gray-500 leading-relaxed">
