@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { emergencyNumbers } from "@/lib/emergencyNumbers";
 import type { EmergencyNumber } from "@/lib/emergencyNumbers";
 
@@ -60,6 +61,41 @@ function SecondaryButton({ num }: { num: EmergencyNumber }) {
   );
 }
 
+function MenuCard() {
+  return (
+    <details className="mb-4 rounded-2xl border border-gray-800 bg-gray-900 text-white group">
+      <summary className="flex min-h-[80px] cursor-pointer list-none items-center justify-between px-5 py-4 marker:hidden">
+        <div>
+          <div className="text-lg font-bold">Menu</div>
+          <div className="mt-1 text-sm text-gray-400">
+            Open quick tools and nearby services
+          </div>
+        </div>
+        <div className="text-2xl text-gray-400 transition-transform group-open:rotate-180">
+          ▾
+        </div>
+      </summary>
+
+      <div className="border-t border-gray-800 px-4 py-4">
+        <Link
+          href="/nearby"
+          className="flex min-h-[72px] items-center justify-between rounded-2xl border border-gray-700 bg-gray-800 px-4 py-4 transition-colors hover:bg-gray-700 active:bg-gray-900"
+        >
+          <div>
+            <div className="text-base font-semibold">Nearby Services</div>
+            <div className="mt-1 text-sm text-gray-400">
+              Find hospitals, police, and fire stations near you
+            </div>
+          </div>
+          <div className="ml-4 text-2xl" aria-hidden="true">
+            📍
+          </div>
+        </Link>
+      </div>
+    </details>
+  );
+}
+
 export default function HomePage() {
   const primary = emergencyNumbers.find((n) => n.primary);
   const secondary = emergencyNumbers.filter((n) => !n.primary);
@@ -77,6 +113,8 @@ export default function HomePage() {
           Tap any number to call instantly
         </p>
       </header>
+
+      <MenuCard />
 
       {primary && (
         <section aria-label="Primary emergency number" className="mb-4">
