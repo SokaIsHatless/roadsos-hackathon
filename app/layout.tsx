@@ -1,5 +1,7 @@
+// File: app/layout.tsx
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import SWRegister from "./SWRegister";
 
 export const metadata: Metadata = {
   title: "RoadSoS — India Emergency Numbers",
@@ -21,11 +23,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="bg-gray-950 text-white min-h-dvh">{children}</body>
+      <body
+        className="bg-gray-950 text-white min-h-dvh"
+        suppressHydrationWarning
+      >
+        <SWRegister />
+        {children}
+      </body>
     </html>
   );
 }
